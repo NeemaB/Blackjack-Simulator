@@ -1,0 +1,10 @@
+{
+    "numDecks": 1,
+    "players": [
+        {
+            "name": "Alice",
+            "betAmount": 100
+        }
+    ],
+    "numGames": 10000
+}
