@@ -10,8 +10,13 @@ class Simulation:
 
     def run_simulation(self):
         game = Game(self.players, self.numDecks)
-        for _ in range(self.numGames):
+        for i in range(self.numGames):
+            if i % (self.numGames / 10) == 0:
+                print('|', end='', flush=True)
             game.play_round()
         
+        print('\n')
+        print('############################################')
+        print('\n')
         for player in self.players:
-            print(f"Player: {player.name}, winnings: ${player.totalWinnings}, total wins: {player.wins}, total losses: {player.losses}, win ratio: {player.win_percentage()}")
+            print(f"Player: {player.name}, winnings: ${player.totalWinnings}, total wins: {player.wins}, total losses: {player.losses}, total draws: {self.numGames - player.losses - player.wins}, win ratio: {player.win_percentage()}")

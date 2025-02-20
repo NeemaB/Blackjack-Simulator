@@ -1,4 +1,4 @@
-from enums import PlayerAction
+from enums import PlayerAction, PlayerType
 from deck import Deck
 from player import Player
 
@@ -10,7 +10,7 @@ class Game:
         self.deck = Deck(numDecks)
         self.deck.shuffle()
         self.players = players
-        self.dealer = Player("Dealer", 0)
+        self.dealer = Player("Dealer", 0, None, playerType=PlayerType.DEALER)
 
     def reset(self):
         """Resets the game by creating a new deck and clearing player hands"""
@@ -25,7 +25,7 @@ class Game:
         for _ in range(2):
             for player in self.players:
                 player.add_card(self.deck.deal_card())
-            self.dealer.add_card(self.deck.deal_card())
+        self.dealer.add_card(self.deck.deal_card()) # Dealer only has one visible card until all players have played
             
     def play_round(self):
         """Plays a round of Blackjack."""
@@ -34,7 +34,7 @@ class Game:
         # Players take their turns
         for player in self.players:
             while player.hand_value() < 21:
-                decision = player.make_decision(self.dealer.hand[0])
+                decision = player.make_decision(self.dealer.hand_value())
                 if decision == PlayerAction.HIT:
                     player.add_card(self.deck.deal_card())
                 else:
@@ -46,20 +46,22 @@ class Game:
             
         # Determine the outcome for each player
         for player in self.players:
-            print(f"Player {player.name}'s hand: {player.hand} (Value: {player.hand_value()})")
+            # print(f"Player {player.name}'s hand: {player.hand} (Value: {player.hand_value()})")
             if player.hand_value() > 21:
-                print(f"{player.name} busts!")
+                # print(f"{player.name} busts!")
                 player.process_loss()
             elif self.dealer.hand_value() > 21 or player.hand_value() > self.dealer.hand_value():
-                print(f"{player.name} wins!")
-                player.process_win()
+                if player.hand_value() == 21 and player.num_cards() == 2:
+                    player.process_blackjack()
+                else:
+                    player.process_win()
             elif player.hand_value() == self.dealer.hand_value():
-                pass
-                print(f"{player.name} pushes (ties) with the dealer.")
+                player.process_draw()
+                # print(f"{player.name} pushes (ties) with the dealer.")
             else:
-                print(f"{player.name} loses.")
+                #print(f"{player.name} loses.")
                 player.process_loss()
 
-        print(f"Dealer's hand: {self.dealer.hand} (Value: {self.dealer.hand_value()})")
+        # print(f"Dealer's hand: {self.dealer.hand} (Value: {self.dealer.hand_value()})")
         self.reset()
     

@@ -3,8 +3,19 @@
     "players": [
         {
             "name": "Alice",
-            "betAmount": 100
+            "betAmount": 100,
+            "strategy": "Chart"
+        },
+        {
+            "name": "John",
+            "betAmount": 100,
+            "strategy": "Default"
+        },
+        {
+            "name": "Timothy",
+            "betAmount": 100,
+            "strategy": "Chart"
         }
     ],
-    "numGames": 10000
+    "numGames": 10000000
 }

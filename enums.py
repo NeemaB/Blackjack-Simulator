@@ -1,5 +1,9 @@
 from enum import Enum
 
+class PlayerType(Enum):
+    REGULAR = 1
+    DEALER = 2
+
 class Suit(Enum):
     HEARTS = 1
     SPADES = 2

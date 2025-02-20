@@ -3,7 +3,7 @@ import json
 class SimulationConfig:
     """Represents the configuration for the Blackjack simulation."""
     
-    def __init__(self, numDecks, players, numGames):
+    def __init__(self, numDecks, players, numGames, ):
         self.numDecks = numDecks
         self.players = players  # List of dictionaries with 'name' and 'betAmount'
         self.numGames = numGames
