@@ -13,6 +13,8 @@ class Suit(Enum):
 class PlayerAction(Enum):
     HIT = 1
     STAND = 2
+    DOUBLE_DOWN = 3
+    SPLIT = 4
 
 class Rank(Enum):
     ACE = 1

@@ -3,10 +3,12 @@ from strategies.default_strategy import DefaultStrategy
 
 class StrategyFactory:
 
-    @classmethod
+    def __init__(self, config):
+        self.config = config
+
     def get_strategy_from_name(self, name=None):
         if name == "Chart":
-            return ChartStrategy()
+            return ChartStrategy(self.config.splitEnabled, self.config.doubleDownEnabled, self.config.ddasEnabled)
         elif name == "Default":
             return DefaultStrategy()
         

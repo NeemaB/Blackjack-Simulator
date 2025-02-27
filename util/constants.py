@@ -1,0 +1,2 @@
+MAIN_HAND = 0
+SPLIT_HAND = 1

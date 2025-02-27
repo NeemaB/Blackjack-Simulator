@@ -1,5 +1,5 @@
 import random
-from enums import Suit, Rank
+from util.enums import Suit, Rank
 
 class Card:
     """Represents a single card in a deck."""

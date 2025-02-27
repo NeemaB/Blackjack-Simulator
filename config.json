@@ -1,5 +1,6 @@
 {
-    "numDecks": 1,
+    "numDecks": 4,
+    "shuffleRatio": 0.5,
     "players": [
         {
             "name": "Alice",
@@ -17,5 +18,8 @@
             "strategy": "Chart"
         }
     ],
-    "numGames": 10000000
+    "numGames": 100000,
+    "doubleDownEnabled": true,
+    "splitEnabled": true,
+    "ddasEnabled": true 
 }
