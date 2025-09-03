@@ -33,7 +33,11 @@ class Deck:
     def __shuffle(self):
         """Shuffles the deck."""
         random.shuffle(self.__availableCards)
-        
+    
+    def get_available_cards(self):
+        """Returns the available cards."""
+        return self.__availableCards
+    
     def deal_card(self):
         """Deals a single card from the deck."""
         if len(self.__availableCards) == 0:

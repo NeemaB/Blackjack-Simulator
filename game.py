@@ -44,7 +44,7 @@ class Game:
 
     def __play_hand(self, player, hand=MAIN_HAND):
         """Handles a player playing a hand recursively until their turn is done"""
-        decision = player.make_decision(self.__dealer.hand_value(), hand)
+        decision = player.make_decision(self.__dealer.get_hand(MAIN_HAND), hand)
         if self.__isDebug:
             print(f"Player {player.name} decision: {decision.name}")
             

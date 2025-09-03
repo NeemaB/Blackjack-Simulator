@@ -11,7 +11,7 @@ class ChartStrategy:
 
     def __hard_total_action(
             self, 
-            dealer_up_card, 
+            dealer_hand_value, 
             player_hand):
         """Determine optimal player action when they have a hard total (no aces that are still counted as 11s) """
         
@@ -21,14 +21,14 @@ class ChartStrategy:
             return PlayerAction.STAND
         
         if player_hand_value >= 13 and player_hand_value < 17:
-            if dealer_up_card >= 7:
+            if dealer_hand_value >= 7:
                 return PlayerAction.HIT
             return PlayerAction.STAND
         
         if player_hand_value == 12:
-            if dealer_up_card < 4:
+            if dealer_hand_value < 4:
                 return PlayerAction.HIT
-            elif dealer_up_card < 7:
+            elif dealer_hand_value < 7:
                 return PlayerAction.STAND
             else:
                 return PlayerAction.HIT
@@ -37,7 +37,7 @@ class ChartStrategy:
 
     def __soft_total_action(
             self, 
-            dealer_up_card,  
+            dealer_hand_value,  
             player_hand):
         """Determine optimal player action when they have a soft total (an ace that can still be converted to a 1)"""
         player_hand_value = hand_util.hand_value(player_hand)
@@ -45,14 +45,14 @@ class ChartStrategy:
         if player_hand_value >= 19:
             return PlayerAction.STAND
         elif player_hand_value == 18:
-            if dealer_up_card < 9:
+            if dealer_hand_value < 9:
                 return PlayerAction.STAND
             return PlayerAction.HIT
         
         else:
             return PlayerAction.HIT
         
-    def __should_double_down(self, dealer_up_card, player_hand, is_soft_total, is_split):
+    def __should_double_down(self, dealer_hand_value, player_hand, is_soft_total, is_split):
         """Determine whether a player can/should double down based on strategy chart"""
         
         if not self.doubleDownEnabled:
@@ -67,18 +67,18 @@ class ChartStrategy:
         player_hand_value = hand_util.hand_value(player_hand)
         
         if is_soft_total:
-            if player_hand_value == 19 and dealer_up_card == 6:
+            if player_hand_value == 19 and dealer_hand_value == 6:
                 return True
-            elif player_hand_value == 18 and dealer_up_card < 7:
+            elif player_hand_value == 18 and dealer_hand_value < 7:
                 return True
             elif player_hand_value == 17:
-                if dealer_up_card > 2 and dealer_up_card < 7:
+                if dealer_hand_value > 2 and dealer_hand_value < 7:
                     return True
             elif player_hand_value == 16 or player_hand == 15:
-                if dealer_up_card > 3 and dealer_up_card < 7:
+                if dealer_hand_value > 3 and dealer_hand_value < 7:
                     return True
             elif player_hand_value <= 14:
-                if dealer_up_card == 5 or dealer_up_card == 6:
+                if dealer_hand_value == 5 or dealer_hand_value == 6:
                     return True
             return False
             
@@ -86,14 +86,14 @@ class ChartStrategy:
             if player_hand_value == 11:
                 return True
             elif player_hand_value == 10:
-                if dealer_up_card < 10:
+                if dealer_hand_value < 10:
                     return True
             elif player_hand_value == 9:
-                if dealer_up_card > 2 and dealer_up_card < 7:
+                if dealer_hand_value > 2 and dealer_hand_value < 7:
                     return True
             return False
              
-    def __should_split(self, dealer_up_card, player_hand):
+    def __should_split(self, dealer_hand_value, player_hand):
         """Determine whether a player can/should split based on strategy chart"""
         if not self.splitEnabled:
             return False
@@ -101,7 +101,6 @@ class ChartStrategy:
         if len(player_hand) != 2:
             return False
         
-        #TODO: Make allowing splits on different 10 valued cards configurable
         if player_hand[0].value != player_hand[1].value:
             return False
         split_value = player_hand[0].value
@@ -110,53 +109,55 @@ class ChartStrategy:
             return True
         
         if split_value == 9:
-            if dealer_up_card < 7 or dealer_up_card == 8 or dealer_up_card == 9:
+            if dealer_hand_value < 7 or dealer_hand_value == 8 or dealer_hand_value == 9:
                 return True
         
         if split_value == 7:
-            if dealer_up_card < 8:
+            if dealer_hand_value < 8:
                 return True
         
         if split_value == 6:
-            if dealer_up_card == 2:
+            if dealer_hand_value == 2:
                 if self.ddasEnabled:
                     return True
-            elif dealer_up_card < 7:
+            elif dealer_hand_value < 7:
                 return True
         
         if split_value == 4:
-            if dealer_up_card == 5 or dealer_up_card == 6:
+            if dealer_hand_value == 5 or dealer_hand_value == 6:
                 if self.ddasEnabled:
                     return True
         
         if split_value <= 3:
-            if dealer_up_card < 4:
+            if dealer_hand_value < 4:
                 if self.ddasEnabled:
                     return True
-            elif dealer_up_card < 8:
+            elif dealer_hand_value < 8:
                 return True
                 
         return False
 
     def calc_player_action(
             self, 
-            dealer_up_card, 
-            player_hand, 
-            player_soft_aces, 
+            dealer_hand, 
+            player_hand,  
             is_split=False):
         
-        if not is_split and self.__should_split(dealer_up_card, player_hand):
+        dealer_hand_value = hand_util.hand_value(dealer_hand)
+        player_soft_aces = hand_util.num_soft_aces(player_hand)
+        
+        if not is_split and self.__should_split(dealer_hand_value, player_hand):
             return PlayerAction.SPLIT
 
         is_soft_total = player_soft_aces == 1
         
-        if self.__should_double_down(dealer_up_card, player_hand, is_split, is_soft_total):
+        if self.__should_double_down(dealer_hand_value, player_hand, is_soft_total, is_split):
             return PlayerAction.DOUBLE_DOWN
         
         if is_soft_total:
-            return self.__soft_total_action(dealer_up_card, player_hand)
+            return self.__soft_total_action(dealer_hand_value, player_hand)
         
-        return self.__hard_total_action(dealer_up_card, player_hand)
+        return self.__hard_total_action(dealer_hand_value, player_hand)
         
 
 

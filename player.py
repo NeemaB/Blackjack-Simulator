@@ -46,12 +46,11 @@ class Player:
         """Returns the player's hand"""
         return self.hands[hand]
     
-    def make_decision(self, dealer_up_card, hand=MAIN_HAND):
+    def make_decision(self, dealer_hand, hand=MAIN_HAND):
         """Makes the ideal decision (Hit or Stand) based on the current hand and the dealer's up card."""
         return self.strategy.calc_player_action(
-            dealer_up_card, 
+            dealer_hand, 
             self.hands[hand], 
-            self.num_soft_aces(hand), 
             len(self.hands) == 2)
     
     def split(self):
