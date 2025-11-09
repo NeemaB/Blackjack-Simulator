@@ -1,0 +1,9 @@
+- Make deck reshuffling configurable. Some casinos reshuffle every round using an auto shuffler whilst some casinos will reshuffle once the last 60 - 75 card are reached within the deck (chosen randomly based on plastic insert card location). 
+
+- Add player actions for doubling down and splitting 
+
+- Update chart strategy to allow for player to double down or split based on cards drawn.
+
+- Add probabilistic strategy that will determine what a player should do based on probability of getting a better hand than the dealer if they hit or stand. Use current deck state to alter probability calculation based on available cards.
+
+- In the case of a winning blackjack, the player wins 1.5 times their bet
