@@ -5,13 +5,14 @@ import random
 class Deck:
     """Represents a deck of 52 cards."""
     
-    def __init__(self, numDecks, shuffleRatio):
+    def __init__(self, numDecks, shuffleRatio, isContinuousShuffle=False):
         self.__availableCards = []
         self.__dealtCards = []
         self.__discardedCards = []
         self.__totalCards = numDecks * 52
         self.__numDecks = numDecks
         self.__shuffleRatio = shuffleRatio
+        self.__isContinuousShuffle = isContinuousShuffle
         self.__reshufflePending = False
         
         self.__initialize()
@@ -53,7 +54,12 @@ class Deck:
     def reset(self):
         """Handle a reset after a round has ended"""
         self.__discardedCards += self.__dealtCards
-        if self.__reshufflePending:
+        self.__dealtCards.clear()
+        
+        if self.__isContinuousShuffle:
+            # Continuous shuffler: reshuffle all cards after every round
+            self.__initialize()
+        elif self.__reshufflePending:
             self.__reshufflePending = False
             self.__initialize()
         elif (len(self.__discardedCards) / self.__totalCards) >= self.__shuffleRatio:

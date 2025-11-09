@@ -1,6 +1,7 @@
 {
     "numDecks": 4,
     "shuffleRatio": 0.5,
+    "isContinuousShuffle": false,
     "players": [
         {
             "name": "Alice",
@@ -10,7 +11,7 @@
         {
             "name": "John",
             "betAmount": 100,
-            "strategy": "Default"
+            "strategy": "Probability"
         },
         {
             "name": "Timothy",

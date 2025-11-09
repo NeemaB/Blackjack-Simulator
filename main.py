@@ -27,7 +27,7 @@ if __name__ == "__main__":
             strategyFactory.get_strategy_from_name(player['strategy'])))
     
     if isDebug:
-        simulation = TestSimulation(config.numDecks, players, config.shuffleRatio)
+        simulation = TestSimulation(config.numDecks, players, config.shuffleRatio, config.isContinuousShuffle)
     else:
-        simulation = Simulation(config.numDecks, players, config.numGames, config.shuffleRatio)
+        simulation = Simulation(config.numDecks, players, config.numGames, config.shuffleRatio, config.isContinuousShuffle)
     simulation.run_simulation()

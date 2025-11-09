@@ -1,19 +1,22 @@
 from game import Game
 
+
 class TestSimulation:
     """Represents a simulation of a blackjack game"""
     TEST_ROUNDS = 2
 
-    def __init__(self, numDecks, players, shuffleRatio):
+    def __init__(self, numDecks, players, shuffleRatio, isContinuousShuffle=False):
         self.__numDecks = numDecks
         self.__players = players
         self.__shuffleRatio = shuffleRatio
+        self.__isContinuousShuffle = isContinuousShuffle
 
     def run_simulation(self):
-        game = Game(self.__players, self.__numDecks, self.__shuffleRatio, isDebug=True)
+        game = Game(self.__players, self.__numDecks,
+                    self.__shuffleRatio, self.__isContinuousShuffle, isDebug=True)
         for _ in range(TestSimulation.TEST_ROUNDS):
             game.play_round()
-        
+
         print('\n')
         print('############################################')
         print('\n')

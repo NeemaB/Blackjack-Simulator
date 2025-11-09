@@ -3,7 +3,7 @@ import json
 class SimulationConfig:
     """Represents the configuration for the Blackjack simulation."""
     
-    def __init__(self, numDecks, players, numGames, shuffleRatio, doubleDownEnabled, splitEnabled, ddasEnabled):
+    def __init__(self, numDecks, players, numGames, shuffleRatio, doubleDownEnabled, splitEnabled, ddasEnabled, isContinuousShuffle=False):
         self.numDecks = numDecks
         self.players = players  # List of dictionaries with 'name' and 'betAmount'
         self.numGames = numGames
@@ -11,6 +11,8 @@ class SimulationConfig:
         self.doubleDownEnabled = doubleDownEnabled
         self.splitEnabled = splitEnabled
         self.ddasEnabled = ddasEnabled
+        # use new name for boolean flag; keep backward-compatibility when loading from JSON
+        self.isContinuousShuffle = isContinuousShuffle
     
     @classmethod
     def from_json(cls, file_path):
@@ -25,6 +27,8 @@ class SimulationConfig:
             doubleDownEnabled=config_data['doubleDownEnabled'],
             splitEnabled=config_data['splitEnabled'],
             ddasEnabled=config_data['ddasEnabled'],
+            # Accept both the old key 'continuousShuffler' and the new key 'isContinuousShuffle'
+            isContinuousShuffle=config_data.get('isContinuousShuffle', config_data.get('continuousShuffler', False)),
         )
     
     def __repr__(self):

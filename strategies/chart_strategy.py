@@ -8,6 +8,28 @@ class ChartStrategy:
         self.splitEnabled = splitEnabled, 
         self.doubleDownEnabled = doubleDownEnabled,
         self.ddasEnabled = ddasEnabled
+        
+    def calc_player_action(
+            self, 
+            dealer_hand, 
+            player_hand,  
+            is_split=False):
+        
+        dealer_hand_value = hand_util.hand_value(dealer_hand)
+        player_soft_aces = hand_util.num_soft_aces(player_hand)
+        
+        if not is_split and self.__should_split(dealer_hand_value, player_hand):
+            return PlayerAction.SPLIT
+
+        is_soft_total = player_soft_aces == 1
+        
+        if self.__should_double_down(dealer_hand_value, player_hand, is_soft_total, is_split):
+            return PlayerAction.DOUBLE_DOWN
+        
+        if is_soft_total:
+            return self.__soft_total_action(dealer_hand_value, player_hand)
+        
+        return self.__hard_total_action(dealer_hand_value, player_hand)    
 
     def __hard_total_action(
             self, 
@@ -137,27 +159,7 @@ class ChartStrategy:
                 
         return False
 
-    def calc_player_action(
-            self, 
-            dealer_hand, 
-            player_hand,  
-            is_split=False):
-        
-        dealer_hand_value = hand_util.hand_value(dealer_hand)
-        player_soft_aces = hand_util.num_soft_aces(player_hand)
-        
-        if not is_split and self.__should_split(dealer_hand_value, player_hand):
-            return PlayerAction.SPLIT
 
-        is_soft_total = player_soft_aces == 1
-        
-        if self.__should_double_down(dealer_hand_value, player_hand, is_soft_total, is_split):
-            return PlayerAction.DOUBLE_DOWN
-        
-        if is_soft_total:
-            return self.__soft_total_action(dealer_hand_value, player_hand)
-        
-        return self.__hard_total_action(dealer_hand_value, player_hand)
         
 
 

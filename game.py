@@ -6,8 +6,8 @@ from player import Player
 class Game:
     """Represents a game of Blackjack."""
     
-    def __init__(self, players, numDecks, shuffleRatio, isDebug=False):
-        self.__deck = Deck(numDecks, shuffleRatio)
+    def __init__(self, players, numDecks, shuffleRatio, isContinuousShuffle=False, isDebug=False):
+        self.__deck = Deck(numDecks, shuffleRatio, isContinuousShuffle)
         self.__players = players
         self.__dealer = Player("Dealer", 0, None, playerType=PlayerType.DEALER)
         self.__isDebug = isDebug
