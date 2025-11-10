@@ -30,6 +30,19 @@ class SimulationConfig:
             # Accept both the old key 'continuousShuffler' and the new key 'isContinuousShuffle'
             isContinuousShuffle=config_data.get('isContinuousShuffle', config_data.get('continuousShuffler', False)),
         )
+        
+    def to_dict(self):
+      """Returns configuration as a dictionary for reporting."""
+      return {
+          'numDecks': self.numDecks,
+          'numGames': self.numGames,
+          'shuffleRatio': self.shuffleRatio,
+          'splitEnabled': self.splitEnabled,
+          'doubleDownEnabled': self.doubleDownEnabled,
+          'ddasEnabled': self.ddasEnabled,
+          'isContinuousShuffle': self.isContinuousShuffle,
+          'players': self.players
+      }
     
     def __repr__(self):
         return (f"SimulationConfig(numDecks={self.numDecks}, "

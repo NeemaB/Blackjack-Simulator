@@ -17,8 +17,23 @@ class Simulation:
                 print('|', end='', flush=True)
             game.play_round()
         
-        print('\n')
-        print('############################################')
-        print('\n')
-        for player in self.__players:
-            print(f"Player: {player.name}, winnings: ${player.totalWinnings}, total wins: {player.wins}, total losses: {player.losses}, total draws: {self.__numGames - player.losses - player.wins}, win ratio: {player.win_percentage()}")
+        # print('\n')
+        # print('############################################')
+        # print('\n')
+        # for player in self.__players:
+        #     print(f"Player: {player.name}, winnings: ${player.totalWinnings}, total wins: {player.wins}, total losses: {player.losses}, total draws: {self.__numGames - player.losses - player.wins}, win ratio: {player.win_percentage()}")
+            
+        return self.get_results()
+        
+    def get_results(self):
+      """Returns structured results for reporting."""
+      return {
+          'players': [player.get_statistics() for player in self.__players],
+          'totalGames': self.__numGames,
+          'configuration': {
+              'numDecks': self.__numDecks,
+              'shuffleRatio': self.__shuffleRatio,
+              'isContinuousShuffle': self.__isContinuousShuffle
+          }
+      }
+        
