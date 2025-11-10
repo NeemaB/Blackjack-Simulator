@@ -393,6 +393,101 @@
                 grid-template-columns: 1fr;
             }
         }
+                /* Strategy Comparison Styles */
+        .comparison-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .comparison-header h3 {
+            font-size: 1.5em;
+            color: #2c3e50;
+        }
+
+        .agreement-badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .agreement-badge.high {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .agreement-badge.medium {
+            background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+        }
+
+        .agreement-badge.low {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .comparison-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .comparison-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .disagreement-details {
+            margin-top: 25px;
+        }
+
+        .disagreement-details h4 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .disagreement-table {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .action-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -573,6 +668,7 @@
                 </div>
                 {% endfor %}
             </div>
+            
 
             <!-- Comparison Table -->
             <div class="section">
@@ -603,6 +699,68 @@
                 </table>
             </div>
         </div>
+        <!-- Strategy Comparison Section (if enabled) -->
+        {% if results.strategy_comparisons %}
+        <div class="section">
+            <h2 class="section-title">Strategy Comparison Analysis</h2>
+            
+            {% for comparison in results.strategy_comparisons %}
+            <div class="comparison-card">
+                <div class="comparison-header">
+                    <h3>{{ comparison.primary_name }} vs {{ comparison.comparison_name }}</h3>
+                    <div class="agreement-badge {% if comparison.agreement_rate[:-1]|float > 90 %}high{% elif comparison.agreement_rate[:-1]|float > 80 %}medium{% else %}low{% endif %}">
+                        {{ comparison.agreement_rate }} Agreement
+                    </div>
+                </div>
+                
+                <div class="comparison-stats">
+                    <div class="comparison-item">
+                        <div class="comparison-label">Total Decisions</div>
+                        <div class="comparison-value">{{ comparison.total_decisions }}</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Agreements</div>
+                        <div class="comparison-value" style="color: #11998e;">{{ comparison.agreements }}</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Disagreements</div>
+                        <div class="comparison-value" style="color: #eb3349;">{{ comparison.disagreements }}</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">Disagreement Rate</div>
+                        <div class="comparison-value">{{ comparison.disagreement_rate }}</div>
+                    </div>
+                </div>
+                
+                {% if comparison.disagreement_details %}
+                <div class="disagreement-details">
+                    <h4>Disagreement Breakdown</h4>
+                    <table class="disagreement-table">
+                        <thead>
+                            <tr>
+                                <th>{{ comparison.primary_name }} Action</th>
+                                <th>{{ comparison.comparison_name }} Action</th>
+                                <th>Occurrences</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, detail in comparison.disagreement_details.items() %}
+                            <tr>
+                                <td><span class="action-badge">{{ detail.primary_action }}</span></td>
+                                <td><span class="action-badge">{{ detail.comparison_action }}</span></td>
+                                <td>{{ detail.count }}</td>
+                                <td>{{ (detail.count / comparison.disagreements * 100) | round(2) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <!-- Footer -->
         <div class="footer">

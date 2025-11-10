@@ -3,7 +3,9 @@ import json
 class SimulationConfig:
     """Represents the configuration for the Blackjack simulation."""
     
-    def __init__(self, numDecks, players, numGames, shuffleRatio, doubleDownEnabled, splitEnabled, ddasEnabled, isContinuousShuffle=False):
+    def __init__(self, numDecks, players, numGames, shuffleRatio, doubleDownEnabled, 
+                 splitEnabled, ddasEnabled, isContinuousShuffle=False, 
+                 strategyComparison=None):
         self.numDecks = numDecks
         self.players = players  # List of dictionaries with 'name' and 'betAmount'
         self.numGames = numGames
@@ -11,8 +13,9 @@ class SimulationConfig:
         self.doubleDownEnabled = doubleDownEnabled
         self.splitEnabled = splitEnabled
         self.ddasEnabled = ddasEnabled
-        # use new name for boolean flag; keep backward-compatibility when loading from JSON
         self.isContinuousShuffle = isContinuousShuffle
+        # New field for strategy comparison configuration
+        self.strategyComparison = strategyComparison or {}
     
     @classmethod
     def from_json(cls, file_path):
@@ -27,22 +30,23 @@ class SimulationConfig:
             doubleDownEnabled=config_data['doubleDownEnabled'],
             splitEnabled=config_data['splitEnabled'],
             ddasEnabled=config_data['ddasEnabled'],
-            # Accept both the old key 'continuousShuffler' and the new key 'isContinuousShuffle'
             isContinuousShuffle=config_data.get('isContinuousShuffle', config_data.get('continuousShuffler', False)),
+            strategyComparison=config_data.get('strategyComparison', {})
         )
-        
+    
     def to_dict(self):
-      """Returns configuration as a dictionary for reporting."""
-      return {
-          'numDecks': self.numDecks,
-          'numGames': self.numGames,
-          'shuffleRatio': self.shuffleRatio,
-          'splitEnabled': self.splitEnabled,
-          'doubleDownEnabled': self.doubleDownEnabled,
-          'ddasEnabled': self.ddasEnabled,
-          'isContinuousShuffle': self.isContinuousShuffle,
-          'players': self.players
-      }
+        """Returns configuration as a dictionary for reporting."""
+        return {
+            'numDecks': self.numDecks,
+            'numGames': self.numGames,
+            'shuffleRatio': self.shuffleRatio,
+            'splitEnabled': self.splitEnabled,
+            'doubleDownEnabled': self.doubleDownEnabled,
+            'ddasEnabled': self.ddasEnabled,
+            'isContinuousShuffle': self.isContinuousShuffle,
+            'players': self.players,
+            'strategyComparison': self.strategyComparison
+        }
     
     def __repr__(self):
         return (f"SimulationConfig(numDecks={self.numDecks}, "

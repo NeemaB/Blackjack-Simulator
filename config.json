@@ -2,6 +2,10 @@
     "numDecks": 4,
     "shuffleRatio": 0.5,
     "isContinuousShuffle": false,
+    "strategyComparison": {
+        "enabled": true,
+        "mode": "chart_vs_probability"
+    },
     "players": [
         {
             "name": "Alice",
@@ -19,7 +23,7 @@
             "strategy": "Chart"
         }
     ],
-    "numGames": 100000,
+    "numGames": 1000,
     "doubleDownEnabled": true,
     "splitEnabled": true,
     "ddasEnabled": true 

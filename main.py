@@ -5,6 +5,7 @@ from test_simulation import TestSimulation
 from simulation_config import SimulationConfig
 from strategies.strategy_factory import StrategyFactory
 from report.report_generator import ReportGenerator
+from deck import Deck
 import argparse
 
 def main():
@@ -12,7 +13,7 @@ def main():
     # Add argument parsing
     parser = argparse.ArgumentParser(description='Blackjack simulation')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-    parser.add_argument('--report', type=str, default=None, help='Generate HTML report to specified file (e.g., report.html)')
+    parser.add_argument('--report', type=str, default=None, help='Generate HTML report to specified file')
     parser.add_argument('--config', type=str, default='config.json', help='Path to configuration file')
     args = parser.parse_args()
     
@@ -22,8 +23,13 @@ def main():
     config = SimulationConfig.from_json(args.config)
     players = []
 
+    # Create a deck instance if needed for probability strategy
+    deck = Deck(config.numDecks, config.shuffleRatio, config.isContinuousShuffle) if any(
+        p.get('strategy') == 'Probability' for p in config.players
+    ) else None
+    
     # Create players with their strategies
-    strategyFactory = StrategyFactory(config)
+    strategyFactory = StrategyFactory(config, deck)
     for player in config.players:
         players.append(Player(
             player['name'], 
@@ -37,6 +43,11 @@ def main():
         simulation = Simulation(config.numDecks, players, config.numGames, config.shuffleRatio, config.isContinuousShuffle)
     
     results = simulation.run_simulation()
+    
+    # Add strategy comparison stats to results if available
+    comparison_stats = strategyFactory.get_comparison_stats()
+    if comparison_stats:
+        results['strategy_comparisons'] = comparison_stats
     
     # Generate report if requested
     if args.report:
