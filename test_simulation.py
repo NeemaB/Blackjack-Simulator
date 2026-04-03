@@ -1,24 +1,29 @@
 from game import Game
+import keyboard
+from base_simulation import BaseSimulation
 
-
-class TestSimulation:
+class TestSimulation(BaseSimulation):
     """Represents a simulation of a blackjack game"""
-    TEST_ROUNDS = 2
 
-    def __init__(self, numDecks, players, shuffleRatio, isContinuousShuffle=False):
-        self.__numDecks = numDecks
-        self.__players = players
-        self.__shuffleRatio = shuffleRatio
-        self.__isContinuousShuffle = isContinuousShuffle
-
-    def run_simulation(self):
-        game = Game(self.__players, self.__numDecks,
-                    self.__shuffleRatio, self.__isContinuousShuffle, isDebug=True)
-        for _ in range(TestSimulation.TEST_ROUNDS):
-            game.play_round()
-
+    def __init__(self, deck, players, isDebug=False):
+        super().__init__(deck, players, isDebug)
+        
+    def run_simulation(self) -> None:
+        game = Game(self._players, self._deck, isDebug=True)
+        self.__play_round_with_message(game)
+        keyboard.add_hotkey('space', lambda: self.__play_round_with_message(game))
+        keyboard.wait()
+        
+    def __play_round_with_message(self, game : Game) -> None:
+        print("******************Starting new round******************")
+        game.play_round()
+        self._numGames += 1
         print('\n')
         print('############################################')
         print('\n')
-        for player in self.__players:
-            print(f"Player: {player.name}, winnings: ${player.totalWinnings}, total wins: {player.wins}, total losses: {player.losses}, total draws: {TestSimulation.TEST_ROUNDS - player.losses - player.wins}, win ratio: {player.win_percentage()}")
+        for player in self._players:
+            player.print_statistics_simple()  
+        print('\n')
+        print("Press 'space' to play the next round...")
+                      
+        

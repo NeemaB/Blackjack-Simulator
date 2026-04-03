@@ -3,6 +3,7 @@ from deck import Deck
 from card import Card
 from util.stats_deck import StatsDeck 
 
+# Updated to use new probability storage types (`win`, `loss`, `draw`)
 def test_calc_player_probs_no_hit():
     # Create a deck with known composition
     statsDeck = StatsDeck()
@@ -19,13 +20,13 @@ def test_calc_player_probs_no_hit():
     print(probs)
 
     # Check that probabilities sum to 1
-    total_prob = probs["probPlayerWin"] + probs["probPlayerLose"] + probs["probPlayerDraw"]
+    total_prob = probs["win"] + probs["loss"] + probs["draw"]
     assert abs(total_prob - 1.0) < 1e-6, "Probabilities do not sum to 1"
 
     # Check that individual probabilities are within valid range
-    assert 0.0 <= probs["probPlayerWin"] <= 1.0, "Invalid probability for player win"
-    assert 0.0 <= probs["probPlayerLose"] <= 1.0, "Invalid probability for player lose"
-    assert 0.0 <= probs["probPlayerDraw"] <= 1.0, "Invalid probability for player draw"
+    assert 0.0 <= probs["win"] <= 1.0, "Invalid probability for player win"
+    assert 0.0 <= probs["loss"] <= 1.0, "Invalid probability for player lose"
+    assert 0.0 <= probs["draw"] <= 1.0, "Invalid probability for player draw"
   
 def test_calc_player_probs_hit():
   statsDeck = StatsDeck()
@@ -41,10 +42,10 @@ def test_calc_player_probs_hit():
   print(probs)
 
   # Check that probabilities sum to 1
-  total_prob = probs["probPlayerWin"] + probs["probPlayerLose"] + probs["probPlayerDraw"]
+  total_prob = probs["win"] + probs["loss"] + probs["draw"]
   assert abs(total_prob - 1.0) < 1e-6, "Probabilities do not sum to 1"
 
   # Check that individual probabilities are within valid range
-  assert 0.0 <= probs["probPlayerWin"] <= 1.0, "Invalid probability for player win"
-  assert 0.0 <= probs["probPlayerLose"] <= 1.0, "Invalid probability for player lose"
-  assert 0.0 <= probs["probPlayerDraw"] <= 1.0, "Invalid probability for player draw"
+  assert 0.0 <= probs["win"] <= 1.0, "Invalid probability for player win"
+  assert 0.0 <= probs["loss"] <= 1.0, "Invalid probability for player lose"
+  assert 0.0 <= probs["draw"] <= 1.0, "Invalid probability for player draw"

@@ -21,7 +21,8 @@ class ProbabilityStrategy():
     def __init__(self, split_enabled: bool = True, 
                  double_down_enabled: bool = True, 
                  ddas_enabled: bool = False,
-                 deck: Deck = None):
+                 deck: Deck = None,
+                 is_debug: bool = False):
         """
         Initialize the probability-based strategy.
         
@@ -30,12 +31,14 @@ class ProbabilityStrategy():
             double_down_enabled (bool): Whether doubling down is allowed. Defaults to True.
             ddas_enabled (bool): Whether double down after split is allowed. Defaults to False.
             deck (Deck): The deck being used in the game. Defaults to None.
+            is_debug (bool): Whether to enable debug mode. Defaults to False.
         """
-        self.split_enabled = split_enabled
-        self.double_down_enabled = double_down_enabled
-        self.ddas_enabled = ddas_enabled
-        self.deck = deck
-    
+        self._split_enabled = split_enabled
+        self._double_down_enabled = double_down_enabled
+        self._ddas_enabled = ddas_enabled
+        self._deck = deck
+        self._is_debug = is_debug
+        
     def calc_player_action(self, dealer_hand: List[Card], 
                           player_hand: List[Card], 
                           is_split: bool = False) -> PlayerAction:
@@ -61,6 +64,10 @@ class ProbabilityStrategy():
         ev_stand = self._calculate_stand_ev(player_value, dealer_up_value, stats_deck)
         ev_hit = self._calculate_hit_ev(player_value, dealer_up_value, stats_deck)
         
+        if self._is_debug:
+            print(f"Player Hand Value: {player_value}, Dealer Upcard: {dealer_up_value}")
+            print(f"EV Stand: {ev_stand}, EV Hit: {ev_hit}")  
+            
         # Initialize with basic options
         best_action = PlayerAction.STAND if ev_stand >= ev_hit else PlayerAction.HIT
         best_ev = max(ev_stand, ev_hit)
@@ -83,7 +90,7 @@ class ProbabilityStrategy():
     
     def _create_stats_deck(self) -> StatsDeck:
         """Create a StatsDeck representing remaining cards in the deck."""
-        return StatsDeck(self.deck)
+        return StatsDeck(self._deck)
     
     def _calculate_stand_ev(self, player_value: int, 
                            dealer_up_value: int, 
@@ -93,6 +100,7 @@ class ProbabilityStrategy():
             return -1.0  # Already busted
         
         probs = calc_player_probs_no_hit(player_value, dealer_up_value, stats_deck)
+        print("probabilities for standing: ", probs)
         
         # Calculate expected value: win = +1, loss = -1, push = 0
         ev = probs.get('win', 0.0) - probs.get('loss', 0.0)
@@ -106,6 +114,7 @@ class ProbabilityStrategy():
             return -1.0  # No point in hitting
         
         probs = calc_player_probs_hit(player_value, dealer_up_value, stats_deck)
+        print("probabilities for hitting: ", probs)
         
         # Calculate expected value
         ev = probs.get('win', 0.0) - probs.get('loss', 0.0)
@@ -265,13 +274,13 @@ class ProbabilityStrategy():
     def _can_double_down(self, player_hand: List[Card], 
                         is_split: bool) -> bool:
         """Check if doubling down is allowed."""
-        if not self.double_down_enabled:
+        if not self._double_down_enabled:
             return False
         
         if len(player_hand) != 2:
             return False
         
-        if is_split and not self.ddas_enabled:
+        if is_split and not self._ddas_enabled:
             return False
         
         return True
@@ -279,7 +288,7 @@ class ProbabilityStrategy():
     def _can_split(self, player_hand: List[Card], 
                   is_split: bool) -> bool:
         """Check if splitting is allowed."""
-        if not self.split_enabled:
+        if not self._split_enabled:
             return False
         
         if is_split:  # Can't split again

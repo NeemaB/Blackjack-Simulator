@@ -16,28 +16,22 @@ class Deck:
         self.__reshufflePending = False
         
         self.__initialize()
-
-    def __initialize(self):
-        """Initialize the deck by clearing all stacks of cards then populating the available cards based on the number of decks"""
-        self.__availableCards.clear()
-        self.__dealtCards.clear()
-        self.__discardedCards.clear()
-
-        for suit in Suit:
-            for rank in Rank:
-                for _ in range(self.__numDecks):
-                    self.__availableCards.append(Card(suit, rank))
-
-        self.__shuffle()
-    
-    
-    def __shuffle(self):
-        """Shuffles the deck."""
-        random.shuffle(self.__availableCards)
-    
+        
     def get_available_cards(self):
         """Returns the available cards."""
         return self.__availableCards
+      
+    def get_num_decks(self):
+        """Returns the number of decks in the shoe."""
+        return self.__numDecks
+      
+    def get_shuffle_ratio(self):
+        """Returns the shuffle ratio."""
+        return self.__shuffleRatio
+      
+    def get_is_continuous_shuffle(self):
+        """Returns whether the deck is a continuous shuffle."""
+        return self.__isContinuousShuffle
     
     def deal_card(self):
         """Deals a single card from the deck."""
@@ -64,4 +58,23 @@ class Deck:
             self.__initialize()
         elif (len(self.__discardedCards) / self.__totalCards) >= self.__shuffleRatio:
             self.__initialize()
+
+    def __initialize(self):
+        """Initialize the deck by clearing all stacks of cards then populating the available cards based on the number of decks"""
+        self.__availableCards.clear()
+        self.__dealtCards.clear()
+        self.__discardedCards.clear()
+
+        for suit in Suit:
+            for rank in Rank:
+                for _ in range(self.__numDecks):
+                    self.__availableCards.append(Card(suit, rank))
+
+        self.__shuffle()
+    
+    
+    def __shuffle(self):
+        """Shuffles the deck."""
+        random.shuffle(self.__availableCards)
+
         

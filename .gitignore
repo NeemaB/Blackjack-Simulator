@@ -115,3 +115,6 @@ celerybeat-schedule
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Results
+results.html

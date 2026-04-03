@@ -105,6 +105,10 @@ class Player:
         self.clear_hand()
         self.isDoubleDown = [False, False]
         
+    def print_statistics_simple(self):
+      """Prints a simple summary of player statistics to the console."""
+      print(f"Player: {self.name}, winnings: ${self.totalWinnings}, total wins: {self.wins}, total losses: {self.losses}, total draws: {self.draws}, win ratio: {self.win_percentage()}")
+        
     def get_statistics(self):
       """Returns a dictionary of player statistics for reporting."""
       return {

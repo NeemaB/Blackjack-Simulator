@@ -15,21 +15,21 @@ def main():
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     parser.add_argument('--report', type=str, default=None, help='Generate HTML report to specified file')
     parser.add_argument('--config', type=str, default='config.json', help='Path to configuration file')
+    parser.add_argument('--test', action='store_true', help='Enable test simulation')
     args = parser.parse_args()
     
     isDebug = args.debug
+    isTest = args.test
     
     # Load configuration
     config = SimulationConfig.from_json(args.config)
     players = []
 
-    # Create a deck instance if needed for probability strategy
-    deck = Deck(config.numDecks, config.shuffleRatio, config.isContinuousShuffle) if any(
-        p.get('strategy') == 'Probability' for p in config.players
-    ) else None
+    # Create a deck instance
+    deck = Deck(config.numDecks, config.shuffleRatio, config.isContinuousShuffle)
     
     # Create players with their strategies
-    strategyFactory = StrategyFactory(config, deck)
+    strategyFactory = StrategyFactory(config, deck, isDebug)
     for player in config.players:
         players.append(Player(
             player['name'], 
@@ -37,20 +37,17 @@ def main():
             strategyFactory.get_strategy_from_name(player['strategy'])))
     
     # Run simulation
-    if isDebug:
-        simulation = TestSimulation(config.numDecks, players, config.shuffleRatio, config.isContinuousShuffle)
+    if isTest:
+        simulation = TestSimulation(deck, players, isDebug)
     else:
-        simulation = Simulation(config.numDecks, players, config.numGames, config.shuffleRatio, config.isContinuousShuffle)
+        simulation = Simulation(deck, players, config.numGames, isDebug)
     
-    results = simulation.run_simulation()
-    
-    # Add strategy comparison stats to results if available
-    comparison_stats = strategyFactory.get_comparison_stats()
-    if comparison_stats:
-        results['strategy_comparisons'] = comparison_stats
+    simulation.run_simulation()
     
     # Generate report if requested
     if args.report:
+        results = simulation.get_results()
+
         try:
             report_gen = ReportGenerator()
             report_gen.generate_report(results, config.to_dict(), args.report)
@@ -61,6 +58,9 @@ def main():
             print(f"\n{'='*60}")
             print(f"✗ Error generating report: {str(e)}")
             print(f"{'='*60}\n")
+    else:
+      for player in players:
+          player.print_statistics_simple()
 
 if __name__ == "__main__":
     main()
