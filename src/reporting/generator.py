@@ -1,32 +1,29 @@
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-import os
 from datetime import datetime
+from pathlib import Path
 
 class ReportGenerator:
     """Generates HTML reports from simulation results using Jinja2 templates."""
     
-    def __init__(self, template_dir='templates'):
+    def __init__(self, template_dir=None):
         """
         Initialize the report generator.
         
         Args:
             template_dir: Directory containing Jinja2 templates
         """
-        self.template_dir = template_dir
-        
-        # Create templates directory if it doesn't exist
-        if not os.path.exists(template_dir):
-            os.makedirs(template_dir)
+        default_template_dir = Path(__file__).resolve().parent / "templates"
+        self.template_dir = Path(template_dir) if template_dir else default_template_dir
         
         # Set up Jinja2 environment
         self.env = Environment(
-            loader=FileSystemLoader(template_dir),
-            autoescape=select_autoescape(['html', 'xml'])
+            loader=FileSystemLoader(str(self.template_dir)),
+            autoescape=select_autoescape(["html", "xml"]),
         )
         
         # Add custom filters
-        self.env.filters['percentage'] = self._percentage_filter
-        self.env.filters['currency'] = self._currency_filter
+        self.env.filters["percentage"] = self._percentage_filter
+        self.env.filters["currency"] = self._currency_filter
         
     def _percentage_filter(self, value, total):
         """Custom Jinja2 filter to calculate percentages."""
@@ -47,22 +44,25 @@ class ReportGenerator:
             config: Dictionary containing simulation configuration
             output_file: Path to output HTML file
         """
-        template = self.env.get_template('report_template.html')
+        template = self.env.get_template("report_template.html")
         
         # Prepare data for template
         report_data = {
-            'title': 'Blackjack Simulation Report',
-            'generated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'config': config,
-            'results': results,
-            'summary': self._calculate_summary(results)
+            "title": "Blackjack Simulation Report",
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "config": config,
+            "results": results,
+            "summary": self._calculate_summary(results),
         }
         
         # Render template
         html_content = template.render(**report_data)
         
         # Write to file
-        with open(output_file, 'w', encoding='utf-8') as f:
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with output_path.open("w", encoding="utf-8") as f:
             f.write(html_content)
     
     def _calculate_summary(self, results):

@@ -1,6 +1,6 @@
-from strategies.chart_strategy import ChartStrategy
-from strategies.default_strategy import DefaultStrategy
-from strategies.probability_strategy import ProbabilityStrategy
+from .chart import ChartStrategy
+from .default import DefaultStrategy
+from .probability import ProbabilityStrategy
 
 class StrategyFactory:
 

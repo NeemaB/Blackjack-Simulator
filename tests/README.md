@@ -6,7 +6,7 @@ This directory contains all tests for the Blackjack Simulator.
 
 ### Run all tests
 ```bash
-python -m pytest tests/ -v
+python -m pytest tests -v
 ```
 
 ### Run specific test file
@@ -18,12 +18,12 @@ python -m pytest tests/strategies/test_chart_strategy.py -v
 
 ### Run with quiet output
 ```bash
-python -m pytest tests/ -q
+python -m pytest tests -q
 ```
 
 ### Run with coverage
 ```bash
-python -m pytest tests/ --cov
+python -m pytest tests --cov
 ```
 
 ## Test Structure

@@ -1,12 +1,11 @@
-from util import hand_util
-from util.enums import PlayerAction
-from player import Player
+from ..domain.enums import PlayerAction
+from ..util import hand
 
 class ChartStrategy:
     """Represents a chart based strategy using a conventional blackjack strategy chart"""
     def __init__(self, splitEnabled=True, doubleDownEnabled=True, ddasEnabled=False):
-        self.splitEnabled = splitEnabled, 
-        self.doubleDownEnabled = doubleDownEnabled,
+        self.splitEnabled = splitEnabled
+        self.doubleDownEnabled = doubleDownEnabled
         self.ddasEnabled = ddasEnabled
         
     def calc_player_action(
@@ -15,8 +14,8 @@ class ChartStrategy:
             player_hand,  
             is_split=False):
         
-        dealer_hand_value = hand_util.hand_value(dealer_hand)
-        player_soft_aces = hand_util.num_soft_aces(player_hand)
+        dealer_hand_value = hand.hand_value(dealer_hand)
+        player_soft_aces = hand.num_soft_aces(player_hand)
         
         if not is_split and self.__should_split(dealer_hand_value, player_hand):
             return PlayerAction.SPLIT
@@ -37,7 +36,7 @@ class ChartStrategy:
             player_hand):
         """Determine optimal player action when they have a hard total (no aces that are still counted as 11s) """
         
-        player_hand_value = hand_util.hand_value(player_hand)
+        player_hand_value = hand.hand_value(player_hand)
 
         if player_hand_value >= 17:
             return PlayerAction.STAND
@@ -62,7 +61,7 @@ class ChartStrategy:
             dealer_hand_value,  
             player_hand):
         """Determine optimal player action when they have a soft total (an ace that can still be converted to a 1)"""
-        player_hand_value = hand_util.hand_value(player_hand)
+        player_hand_value = hand.hand_value(player_hand)
          
         if player_hand_value >= 19:
             return PlayerAction.STAND
@@ -86,7 +85,7 @@ class ChartStrategy:
         if is_split and not self.ddasEnabled:
             return False
         
-        player_hand_value = hand_util.hand_value(player_hand)
+        player_hand_value = hand.hand_value(player_hand)
         
         if is_soft_total:
             if player_hand_value == 19 and dealer_hand_value == 6:
@@ -96,7 +95,7 @@ class ChartStrategy:
             elif player_hand_value == 17:
                 if dealer_hand_value > 2 and dealer_hand_value < 7:
                     return True
-            elif player_hand_value == 16 or player_hand == 15:
+            elif player_hand_value == 16 or player_hand_value == 15:
                 if dealer_hand_value > 3 and dealer_hand_value < 7:
                     return True
             elif player_hand_value <= 14:
@@ -123,9 +122,9 @@ class ChartStrategy:
         if len(player_hand) != 2:
             return False
         
-        if player_hand[0].value != player_hand[1].value:
+        if player_hand[0].value() != player_hand[1].value():
             return False
-        split_value = player_hand[0].value
+        split_value = player_hand[0].value()
         
         if split_value == 11 or split_value == 8:
             return True

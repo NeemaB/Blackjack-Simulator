@@ -1,7 +1,8 @@
 """Probability helpers for player/dealer outcomes.
 """
 from typing import TypedDict
-from util.stats_deck import StatsDeck
+
+from .stats_deck import StatsDeck
 
 class DealerOutcomeProbs(TypedDict):
     win: float

@@ -1,7 +1,5 @@
-from util.probability import calc_player_probs_no_hit, calc_player_probs_hit
-from deck import Deck
-from card import Card
-from util.stats_deck import StatsDeck 
+from src.probability.calculator import calc_player_probs_hit, calc_player_probs_no_hit
+from src.probability.stats_deck import StatsDeck
 
 # Updated to use new probability storage types (`win`, `loss`, `draw`)
 def test_calc_player_probs_no_hit():

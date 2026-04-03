@@ -1,7 +1,6 @@
-from util.constants import MAIN_HAND, SPLIT_HAND
-from util.enums import PlayerAction, PlayerType
-from deck import Deck
-from player import Player
+from .constants import MAIN_HAND, SPLIT_HAND
+from .enums import PlayerAction, PlayerType
+from .player import Player
 
 class Game:
     """Represents a game of Blackjack."""

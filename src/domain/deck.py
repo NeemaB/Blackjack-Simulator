@@ -1,6 +1,7 @@
-from util.enums import Rank, Suit
-from card import Card
 import random
+
+from .card import Card
+from .enums import Rank, Suit
 
 class Deck:
     """Represents a deck of 52 cards."""

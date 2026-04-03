@@ -1,13 +1,14 @@
 from typing import List
-from card import Card
-from deck import Deck
-from util.stats_deck import StatsDeck
-from util.enums import PlayerAction
-from util.hand_util import hand_value, num_soft_aces
-from util.probability import (
+
+from ..domain.card import Card
+from ..domain.deck import Deck
+from ..domain.enums import PlayerAction
+from ..probability.calculator import (
     calc_player_probs_hit,
-    calc_player_probs_no_hit
+    calc_player_probs_no_hit,
 )
+from ..probability.stats_deck import StatsDeck
+from ..util.hand import hand_value
 
 class ProbabilityStrategy():
     """

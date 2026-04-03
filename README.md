@@ -1,8 +1,8 @@
 # Blackjack Simulator
 
-A simple python console application that allows a user to experiment with various blackjack setups and calculate the expected win/loss ratio of a player (or multiple) given a particular setup.
+A simple Python console application that allows a user to experiment with various blackjack setups and calculate the expected win/loss ratio of one or more players given a particular setup.
 
-The `config.json` file can be updated to provide the following fields:
+The default config lives at `configs/default.json` and supports the following fields:
 
 - numDecks: The number of decks the dealer is using
 - shuffleRatio: The ratio of the original deck size, after which the shuffler will perform a reshuffle of the deck of cards
@@ -22,5 +22,32 @@ Player: Timothy, winnings: $-78300.0, total wins: 43119, total losses: 47484, to
 
 The *chart strategy* used is according to this table:
 ![BJA_Basic_Chart_Strategy](https://github.com/user-attachments/assets/798e5038-8aa2-452e-9c6d-c11d49f88aa1)
+
+## Project Layout
+
+```text
+src/
+  cli.py
+  domain/
+  probability/
+  reporting/
+  util/
+  simulation/
+  strategies/
+tests/
+configs/
+assets/
+```
+
+## Running
+
+```bash
+python main.py
+python main.py --config configs/default.json
+python main.py --test
+python -m pytest tests -v
+```
+
+Manual test mode is terminal-driven and does not require the `keyboard` package or root privileges. Press `Enter` to play the next round and `q` to quit.
 
 

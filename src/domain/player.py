@@ -1,8 +1,8 @@
-from util import hand_util
-from util.enums import PlayerAction, PlayerType
-from util.enums import Rank
-from util.constants import MAIN_HAND, SPLIT_HAND
 from collections import defaultdict
+
+from .constants import MAIN_HAND, SPLIT_HAND
+from .enums import PlayerType
+from ..util import hand as hand_utils
 
 class Player:
     """Represents a player in the game."""
@@ -40,11 +40,11 @@ class Player:
 
     def num_soft_aces(self, hand=MAIN_HAND):
         """Calculates the number of aces still considered as '11' in the player's hand"""
-        return hand_util.num_soft_aces(self.hands[hand])
+        return hand_utils.num_soft_aces(self.hands[hand])
         
     def hand_value(self, hand=MAIN_HAND):
         """Calculates the value of the player's hand, adjusting for Aces."""
-        return hand_util.hand_value(self.hands[hand])
+        return hand_utils.hand_value(self.hands[hand])
     
     def get_hand(self, hand=MAIN_HAND):
         """Returns the player's hand"""

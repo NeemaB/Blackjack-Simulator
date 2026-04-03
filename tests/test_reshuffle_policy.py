@@ -1,7 +1,7 @@
-from deck import Deck
 import pytest
 
-from util.enums import Suit
+from src.domain.deck import Deck
+from src.domain.enums import Suit
 
 @pytest.mark.parametrize(
     "testShuffleRatio, testNumDecks",

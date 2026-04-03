@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 class SimulationConfig:
     """Represents the configuration for the Blackjack simulation."""
@@ -18,7 +19,7 @@ class SimulationConfig:
     @classmethod
     def from_json(cls, file_path):
         """Loads the configuration from a JSON file."""
-        with open(file_path, 'r') as file:
+        with Path(file_path).open("r", encoding="utf-8") as file:
             config_data = json.load(file)
         return cls(
             numDecks=config_data['numDecks'],

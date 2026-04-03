@@ -65,6 +65,8 @@ env.bak/
 venv.bak/
 pyvenv.cfg
 Scripts/
+Include/
+Lib/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -118,3 +120,4 @@ dmypy.json
 
 # Results
 results.html
+output/

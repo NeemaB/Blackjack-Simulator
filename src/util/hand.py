@@ -1,4 +1,4 @@
-from util.enums import Rank
+from ..domain.enums import Rank
 
 def num_soft_aces(hand):
     """Calculates the number of aces still considered as '11' in the player's hand"""

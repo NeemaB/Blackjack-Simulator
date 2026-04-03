@@ -1,7 +1,7 @@
-from game import Game
-from base_simulation import BaseSimulation
+from ..domain.game import Game
+from .base import BaseSimulation
 
-class Simulation(BaseSimulation):
+class SimulationRunner(BaseSimulation):
     """Represents a simulation of a blackjack game"""
 
     def __init__(self, deck, players, totalGames, isDebug=False):

@@ -1,6 +1,6 @@
-from card import Card
-from strategies.chart_strategy import ChartStrategy
-from util.enums import PlayerAction, Rank, Suit
+from src.domain.card import Card
+from src.domain.enums import PlayerAction, Rank, Suit
+from src.strategies.chart import ChartStrategy
 
 class TestChartStrategy:
     def test_calc_player_action(self):
